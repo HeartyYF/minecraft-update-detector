@@ -26,7 +26,7 @@ func check(filename string) (bool) {
 
 func main() {
 	var release, snapshot string
-	
+	//检测存在性
 	if check("release.txt") {
 		f, err:= os.Open("release.txt")
 		if err != nil {
@@ -37,7 +37,6 @@ func main() {
 		s, _, _ := br.ReadLine()
 		release = string(s)
 	}
-	
 	if check("snapshot.txt") {
 		f, err:= os.Open("snapshot.txt")
 		if err != nil {
@@ -50,6 +49,7 @@ func main() {
 	}
 
 home:
+	//获取manifest
 	res, err := http.Get(url)
 	if err != nil {
 		now := time.Now()
@@ -64,7 +64,8 @@ home:
 	}
 	io.WriteString(f, string(body))
 
-    m := make(map[string]interface{})
+	//json映射
+	m := make(map[string]interface{})
 	err = json.Unmarshal(body, &m)
 	if err != nil {
 		panic(err)
@@ -75,6 +76,8 @@ home:
 	now := time.Now()
 	fmt.Printf("%d-%02d-%02d %02d:%02d:%02d: ",now.Year(),now.Month(),now.Day(),now.Hour(),now.Minute(),now.Second())
 	fmt.Printf("Release: %s    Snapshot: %s \r\n",crelease,csnapshot)
+	
+	//判断是否新版本
 	if crelease != release {
 		fmt.Printf("New Release Found: %s\r\n",crelease)
 		f, err:= os.Create("release.txt")
@@ -93,6 +96,7 @@ home:
 		io.WriteString(f, csnapshot)
 		snapshot = csnapshot
 	}
+	
 	time.Sleep(time.Duration(inverval)*time.Second)
 	goto home
 }
