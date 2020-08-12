@@ -87,7 +87,7 @@ home:
 		io.WriteString(f, crelease)
 		release = crelease
 	}
-	if csnapshot != snapshot {
+	if csnapshot != snapshot && csnapshot != crelease {
 		fmt.Printf("New Snapshot Found: %s\r\n",csnapshot)
 		f, err:= os.Create("snapshot.txt")
 		if err != nil {
