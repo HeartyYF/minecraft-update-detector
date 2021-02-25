@@ -68,7 +68,10 @@ home:
 	m := make(map[string]interface{})
 	err = json.Unmarshal(body, &m)
 	if err != nil {
-		panic(err)
+		now := time.Now()
+		fmt.Printf("%d-%02d-%02d %02d:%02d:%02d: Failed to read json. Reason: %s\r\n",now.Year(),now.Month(),now.Day(),now.Hour(),now.Minute(),now.Second(),err)
+		time.Sleep(time.Duration(inverval)*time.Second)
+		goto home
 	}
 	crelease := m["latest"].(map[string]interface{})["release"].(string)
 	csnapshot := m["latest"].(map[string]interface{})["snapshot"].(string)
